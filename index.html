@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Simulação de Política</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Jogo de Simulação de Política</h1>
+            <div id="status">
+                <h2>Status do Jogador</h2>
+                <p><strong>Nome:</strong> <span id="playerName">Político A</span></p>
+                <p><strong>Popularidade:</strong> <span id="playerPopularity">50</span></p>
+                <p><strong>Políticas Implementadas:</strong> <span id="policiesImplemented">0</span></p>
+                <p><strong>Fundos Disponíveis:</strong> R$ <span id="playerFunds">10000</span></p>
+            </div>
+        </header>
+        <section id="controls">
+            <h2>Controles</h2>
+            <button id="implementPolicyBtn">Implementar Política</button>
+            <button id="runCampaignBtn">Iniciar Campanha Eleitoral</button>
+            <button id="nextTurnBtn">Próximo Turno</button>
+        </section>
+        <section id="politicians">
+            <h2>Políticos NPCs</h2>
+            <!-- Aqui serão exibidos os políticos NPCs -->
+        </section>
+        <section id="events">
+            <h2>Eventos</h2>
+            <div id="eventLog">
+                <!-- Aqui serão exibidos os eventos do jogo -->
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
