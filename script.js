@@ -204,9 +204,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Dados dos políticos (latitude, longitude, nome)
 var politiciansMap = [
     { lat: 38.89511, lng: -77.03637, name: "Político Pinto" },  // Exemplo: Washington, DC
-    { lat: 51.509865, lng: -0.118092, name: "Político B" },  // Exemplo: Londres
-    { lat: 35.689487, lng: 139.691711, name: "Político C" }, // Exemplo: Tóquio
-    { lat: -33.865143, lng: 151.209900, name: "Político D" }, // Exemplo: Sydney
+    { lat: 51.509865, lng: -0.118092, name: "Político Nuno" },  // Exemplo: Londres
+    { lat: 35.689487, lng: 139.691711, name: "Político Flynn" }, // Exemplo: Tóquio
+    { lat: -33.865143, lng: 151.209900, name: "Político Heisenbergs" }, // Exemplo: Sydney
     // Adicione mais políticos conforme necessário
 ];
 
