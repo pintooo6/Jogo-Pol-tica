@@ -3,19 +3,22 @@ let player = {
     name: "Político Pinto",
     popularity: 50,
     policiesImplemented: 0,
-    funds: 10000
+    funds: 10000,
+    incomePerTurn: 2000 // Nova variável para renda por turno
 };
 
 let politicians = []; // Array para armazenar políticos NPCs (incluindo inimigos)
 
 let eventLog = document.getElementById('eventLog');
 let politiciansUI = document.getElementById('politicians');
+let incomeUI = document.getElementById('incomePerTurn'); // Elemento na interface para mostrar a renda por turno
 
 // Função para inicializar o jogo
 function initGame() {
     createNPCPoliticians(); // Criar políticos NPCs iniciais (incluindo inimigos)
     updateStatusUI();
     updatePoliticiansUI();
+    updateIncomeUI(); // Atualizar a interface com a renda por turno inicial
 }
 
 // Função para criar políticos NPCs iniciais (incluindo inimigos)
@@ -50,7 +53,7 @@ function updateStatusUI() {
     document.getElementById('playerName').textContent = player.name;
     document.getElementById('playerPopularity').textContent = player.popularity;
     document.getElementById('policiesImplemented').textContent = player.policiesImplemented;
-    document.getElementById('playerFunds').textContent = player.funds;
+    document.getElementById('playerFunds').textContent = player.funds.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); // Formatação de moeda
 }
 
 // Função para atualizar a interface de status dos políticos NPCs
@@ -67,10 +70,15 @@ function updatePoliticiansUI() {
             <h3>${politician.name}</h3>
             <p><strong>Popularidade:</strong> ${politician.popularity}</p>
             <p><strong>Políticas Implementadas:</strong> ${politician.policiesImplemented}</p>
-            <p><strong>Fundos Disponíveis:</strong> R$ ${politician.funds}</p>
+            <p><strong>Fundos Disponíveis:</strong> ${politician.funds.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
         `;
         politiciansUI.appendChild(politicianElement);
     });
+}
+
+// Função para atualizar a interface com a renda por turno
+function updateIncomeUI() {
+    incomeUI.textContent = player.incomePerTurn.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); // Formatação de moeda
 }
 
 // Função para implementar uma nova política pelo jogador
@@ -80,7 +88,7 @@ function implementPolicy() {
     player.policiesImplemented++;
 
     updateStatusUI();
-    logEvent(`Implementou uma nova política. Popularidade +5, Fundos -R$1000.`);
+    logEvent(`Implementou uma nova política. Popularidade +5, Fundos -R$1.000,00.`);
 }
 
 // Função para iniciar uma campanha eleitoral pelo jogador
@@ -91,7 +99,7 @@ function runCampaign() {
     player.popularity += impact;
 
     updateStatusUI();
-    logEvent(`Iniciou uma campanha eleitoral. Popularidade +${impact}, Fundos -R$${campaignCost}.`);
+    logEvent(`Iniciou uma campanha eleitoral. Popularidade +${impact}, Fundos -R$2.000,00.`);
 }
 
 // Função para simular o próximo turno (continuação)
@@ -121,6 +129,8 @@ function nextTurn() {
         }
     });
 
+    player.funds += player.incomePerTurn; // Adicionar renda por turno aos fundos do jogador
+
     updateStatusUI();
     updatePoliticiansUI();
 }
@@ -133,14 +143,14 @@ function enemyDecision(politician) {
         politician.popularity += Math.floor(Math.random() * 5) + 1;
         politician.funds -= 1000;
         politician.policiesImplemented++;
-        logEvent(`${politician.name} implementou uma nova política prejudicial. Popularidade +${politician.popularity}, Fundos -R$1000.`);
+        logEvent(`${politician.name} implementou uma nova política prejudicial. Popularidade +${politician.popularity}, Fundos -R$1.000,00.`);
     } else {
         // Político inimigo inicia uma campanha eleitoral
         let campaignCost = Math.floor(Math.random() * 2000) + 1000;
         politician.funds -= campaignCost;
         let impact = Math.floor(Math.random() * 5) + 1;
         politician.popularity += impact;
-        logEvent(`${politician.name} iniciou uma campanha eleitoral contra ${player.name}. Popularidade +${impact}, Fundos -R$${campaignCost}.`);
+        logEvent(`${politician.name} iniciou uma campanha eleitoral contra ${player.name}. Popularidade +${impact}, Fundos -R$${campaignCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.`);
     }
 }
 
@@ -152,14 +162,14 @@ function regularNPCDecision(politician) {
         politician.popularity += Math.floor(Math.random() * 5) + 1;
         politician.funds -= 1000;
         politician.policiesImplemented++;
-        logEvent(`${politician.name} implementou uma nova política. Popularidade +${politician.popularity}, Fundos -R$1000.`);
+        logEvent(`${politician.name} implementou uma nova política. Popularidade +${politician.popularity}, Fundos -R$1.000,00.`);
     } else {
         // Iniciar uma campanha eleitoral
         let campaignCost = Math.floor(Math.random() * 2000) + 1000;
         politician.funds -= campaignCost;
         let impact = Math.floor(Math.random() * 5) + 1;
         politician.popularity += impact;
-        logEvent(`${politician.name} iniciou uma campanha eleitoral. Popularidade +${impact}, Fundos -R$${campaignCost}.`);
+        logEvent(`${politician.name} iniciou uma campanha eleitoral. Popularidade +${impact}, Fundos -R$${campaignCost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.`);
     }
 }
 
@@ -170,13 +180,38 @@ function logEvent(message) {
     eventLog.appendChild(eventMessage);
     eventLog.scrollTop = eventLog.scrollHeight; // Rolagem automática para o último evento
 }
+// Mostrar o overlay de carregamento ao iniciar
+$(window).on('load', function() {
+    $('#overlay').fadeOut();
+});
 
-// Inicializar o jogo quando a página carregar
-window.onload = function() {
-    initGame();
+// Mostrar o overlay de carregamento ao clicar em algum botão de controle
+$('#implementPolicyBtn, #runCampaignBtn, #nextTurnBtn').on('click', function() {
+    $('#overlay').fadeIn();
+    setTimeout(function() {
+        $('#overlay').fadeOut();
+    }, 1000); // Tempo simulado de carregamento (1 segundo)
+});
 
-    // Event listeners para os botões de controle
-    document.getElementById('implementPolicyBtn').addEventListener('click', implementPolicy);
-    document.getElementById('runCampaignBtn').addEventListener('click', runCampaign);
-    document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
-};
+// Inicializa o mapa e define a visualização inicial
+var map = L.map('map').setView([20, 0], 2);
+
+// Adiciona a camada do mapa (OpenStreetMap)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Dados dos políticos (latitude, longitude, nome)
+var politiciansMap = [
+    { lat: 38.89511, lng: -77.03637, name: "Político Pinto" },  // Exemplo: Washington, DC
+    { lat: 51.509865, lng: -0.118092, name: "Político B" },  // Exemplo: Londres
+    { lat: 35.689487, lng: 139.691711, name: "Político C" }, // Exemplo: Tóquio
+    { lat: -33.865143, lng: 151.209900, name: "Político D" }, // Exemplo: Sydney
+    // Adicione mais políticos conforme necessário
+];
+
+// Adiciona marcadores no mapa para cada político
+politiciansMap.forEach(function(politician) {
+    var marker = L.marker([politician.lat, politician.lng]).addTo(map);
+    marker.bindPopup(`<b>${politician.name}</b>`).openPopup();
+});
