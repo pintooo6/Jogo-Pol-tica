@@ -1,2 +1,2 @@
-# Jogo-Pol-tica
- a
+# Jogo_Politica
+Simulação de Democracia
